@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Alphabet Encoder</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        textarea, input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        button {
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            display: block;
+            margin: 0 auto;
+        }
+        button:hover {
+            background-color: #3367d6;
+        }
+        #output {
+            min-height: 100px;
+            background-color: #f8f8f8;
+        }
+        .encoding-table {
+            font-size: 14px;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .encoding-table h3 {
+            margin-top: 0;
+        }
+        .encoding-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 5px;
+        }
+        @media (max-width: 480px) {
+            .encoding-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>The Scream Ciper</h1>
+        <p>Encode your text with the Scream Cipher. This cipher is a simple substitution cipher that replaces each letter of the alphabet with a unique character.</p>
+        <p>This is based on <a href="https://xkcd.com/3054/">https://xkcd.com/3054/</a> check it out.</p>
+
+        <div class="form-group">
+            <label for="input">Input Text:</label>
+            <textarea id="input" rows="3" placeholder="Type text to encode here..."></textarea>
+        </div>
+
+        <div class="form-group">
+            <button onclick="encodeText()">Encode Text</button>
+        </div>
+
+        <div class="form-group">
+            <label for="output">Encoded Result:</label>
+            <textarea id="output" rows="3" readonly></textarea>
+        </div>
+
+    </div>
+
+    <script>
+        // Initialize encoding map
+        const encodingMap = {
+            'A': 'A',
+            'B': 'Ȧ',
+            'C': 'Ą',
+            'D': 'ᾼ',
+            'E': 'Á',
+            'F': 'Ḁ',
+            'G': 'Ȁ',
+            'H': 'Ậ',
+            'I': 'Ẳ',
+            'J': 'Å',
+            'K': 'Ạ',
+            'L': 'Ă',
+            'M': 'Ǎ',
+            'N': 'Â',
+            'O': 'Å',
+            'P': 'Ặ',
+            'Q': 'Ạ̇',
+            'R': 'Ȃ',
+            'S': 'Ã',
+            'T': 'Ā',
+            'U': 'Ä',
+            'V': 'À',
+            'W': 'Ȁ',
+            'X': 'Ẩ',
+            'Y': 'Ạ̦',
+            'Z': 'Ⱥ'
+        };
+
+        // Auto-uppercase input as user types
+        document.getElementById('input').addEventListener('input', function(e) {
+            const start = this.selectionStart;
+            const end = this.selectionEnd;
+            this.value = this.value.toUpperCase();
+            this.setSelectionRange(start, end);
+        });
+
+        // Encode function
+        function encodeText() {
+            const input = document.getElementById('input').value;
+            let encoded = '';
+
+            for (let i = 0; i < input.length; i++) {
+                const char = input[i];
+                if (encodingMap[char]) {
+                    encoded += encodingMap[char];
+                } else {
+                    // Keep characters that don't have encodings (spaces, numbers, etc.)
+                    encoded += char;
+                }
+            }
+
+            document.getElementById('output').value = encoded;
+        }
+    </script>
+</body>
+</html>
