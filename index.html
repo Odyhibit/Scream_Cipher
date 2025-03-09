@@ -3,10 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Custom Alphabet Encoder</title>
+    <title>Scream Cipher Encoder/Decoder</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap');
+
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Noto Sans', Arial, sans-serif;
             max-width: 600px;
             margin: 0 auto;
             padding: 20px;
@@ -37,6 +39,13 @@
             border-radius: 4px;
             box-sizing: border-box;
             font-size: 16px;
+            font-family: 'Noto Sans', Arial, sans-serif;
+        }
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
         }
         button {
             background-color: #4285f4;
@@ -46,8 +55,6 @@
             border-radius: 4px;
             cursor: pointer;
             font-size: 16px;
-            display: block;
-            margin: 0 auto;
         }
         button:hover {
             background-color: #3367d6;
@@ -56,82 +63,86 @@
             min-height: 100px;
             background-color: #f8f8f8;
         }
-        .encoding-table {
-            font-size: 14px;
+        .debug {
             margin-top: 20px;
-            padding: 10px;
-            background-color: #f8f8f8;
-            border-radius: 4px;
-            max-height: 200px;
-            overflow-y: auto;
-        }
-        .encoding-table h3 {
-            margin-top: 0;
-        }
-        .encoding-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 5px;
-        }
-        @media (max-width: 480px) {
-            .encoding-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
+            font-size: 12px;
+            color: #666;
+            display: none;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>The Scream Ciper</h1>
-        <p>Encode your text with the Scream Cipher. This cipher is a simple substitution cipher that replaces each letter of the alphabet with a unique character.</p>
-        <p>This is based on <a href="https://xkcd.com/3054/">https://xkcd.com/3054/</a> check it out.</p>
-
+        <h1>Scream Cipher Encoder/Decoder</h1>
+        <p>This is an implementation of <a href="https://xkcd.com/3054/">https://xkcd.com/3054/</a> Check it out this comic is great.</p>
         <div class="form-group">
             <label for="input">Input Text:</label>
-            <textarea id="input" rows="3" placeholder="Type text to encode here..."></textarea>
+            <textarea id="input" rows="3" placeholder="Type text here..."></textarea>
+        </div>
+
+        <div class="button-group">
+            <button onclick="encodeText()">Encode</button>
+            <button onclick="decodeText()">Decode</button>
+            <button onclick="swapText()">Swap ↑↓</button>
         </div>
 
         <div class="form-group">
-            <button onclick="encodeText()">Encode Text</button>
-        </div>
-
-        <div class="form-group">
-            <label for="output">Encoded Result:</label>
+            <label for="output">Result:</label>
             <textarea id="output" rows="3" readonly></textarea>
         </div>
-
     </div>
 
     <script>
-        // Initialize encoding map
+        // Create fixed mapping with careful attention to unique codes
         const encodingMap = {
-            'A': 'A',
-            'B': 'Ȧ',
-            'C': 'Ą',
-            'D': 'ᾼ',
-            'E': 'Á',
-            'F': 'Ḁ',
-            'G': 'Ȁ',
-            'H': 'Ậ',
-            'I': 'Ẳ',
-            'J': 'Å',
-            'K': 'Ạ',
-            'L': 'Ă',
-            'M': 'Ǎ',
-            'N': 'Â',
-            'O': 'Å',
-            'P': 'Ặ',
-            'Q': 'Ạ̇',
-            'R': 'Ȃ',
-            'S': 'Ã',
-            'T': 'Ā',
-            'U': 'Ä',
-            'V': 'À',
-            'W': 'Ȁ',
-            'X': 'Ẩ',
-            'Y': 'Ạ̦',
-            'Z': 'Ⱥ'
+            'A': 'A',     // Simple A
+            'B': 'Ȧ',     // A with dot above (U+0226)
+            'C': 'Ą',     // A with ogonek (U+0104)
+            'D': 'ᾼ',     // Greek Alpha with macron (U+1FBC)
+            'E': 'Á',     // A with acute (U+00C1)
+            'F': 'Ḁ',     // A with ring below (U+1E00)
+            'G': 'Ȁ',     // A with double grave (U+0200)
+            'H': 'Ậ',     // A with circumflex and dot below (U+1EAC)
+            'I': 'Ẳ',     // A with breve and hook above (U+1EB2)
+            'J': 'Å',     // A with ring above (U+00C5)
+            'K': 'Ạ',     // A with dot below (U+1EA0)
+            'L': 'Ă',     // A with breve (U+0102)
+            'M': 'Ǎ',     // A with caron (U+01CD)
+            'N': 'Â',     // A with circumflex (U+00C2)
+            'O': 'Å',     // A with ring above (U+00C5) - NOTE: Same as J, will handle in code
+            'P': 'Ặ',     // A with breve and dot below (U+1EB6)
+            'Q': 'Ạ̇',     // A with dot below and dot above
+            'R': 'Ȃ',     // A with inverted breve (U+0202)
+            'S': 'Ã',     // A with tilde (U+00C3)
+            'T': 'Ā',     // A with macron (U+0100)
+            'U': 'Ä',     // A with diaeresis (U+00C4)
+            'V': 'À',     // A with grave (U+00C0)
+            'W': 'Ȁ',     // A with double grave (U+0200) - NOTE: Same as G, will handle in code
+            'X': 'Ẩ',     // A with circumflex and hook above (U+1EA8)
+            'Y': 'Ạ̦',     // A with dot below and comma below
+            'Z': 'Ⱥ'      // A with stroke (U+023A)
         };
+
+        // Creating a precise decoding map with context handling
+        function getDecodingMap() {
+            // First, create a base decoding map
+            const decodingMap = {};
+            for (const [key, value] of Object.entries(encodingMap)) {
+                // Special handling for ambiguous characters
+                if (value === 'Å') {
+                    // We'll handle J/O specially in the decode function
+                    decodingMap['Å'] = 'J';  // Default to J
+                } else if (value === 'Ȁ') {
+                    // We'll handle G/W specially in the decode function
+                    decodingMap['Ȁ'] = 'G';  // Default to G
+                } else {
+                    decodingMap[value] = key;
+                }
+            }
+            return decodingMap;
+        }
+
+        const decodingMap = getDecodingMap();
 
         // Auto-uppercase input as user types
         document.getElementById('input').addEventListener('input', function(e) {
@@ -141,7 +152,7 @@
             this.setSelectionRange(start, end);
         });
 
-        // Encode function
+        // Encode function with position awareness
         function encodeText() {
             const input = document.getElementById('input').value;
             let encoded = '';
@@ -149,7 +160,16 @@
             for (let i = 0; i < input.length; i++) {
                 const char = input[i];
                 if (encodingMap[char]) {
-                    encoded += encodingMap[char];
+                    // Add special markers for disambiguation
+                    if (char === 'O') {
+                        // Use a zero-width space as a marker for O vs J
+                        encoded += '\u200B' + encodingMap[char];
+                    } else if (char === 'W') {
+                        // Use a zero-width non-joiner as a marker for W vs G
+                        encoded += '\u200C' + encodingMap[char];
+                    } else {
+                        encoded += encodingMap[char];
+                    }
                 } else {
                     // Keep characters that don't have encodings (spaces, numbers, etc.)
                     encoded += char;
@@ -157,6 +177,72 @@
             }
 
             document.getElementById('output').value = encoded;
+        }
+
+        // Decode function with improved character disambiguation
+        function decodeText() {
+            const input = document.getElementById('input').value;
+            let decoded = '';
+
+            for (let i = 0; i < input.length; i++) {
+                // Check for marker characters
+                if (input[i] === '\u200B') {
+                    // This is our O marker, skip and decode next char as O
+                    i++;
+                    decoded += 'O';
+                } else if (input[i] === '\u200C') {
+                    // This is our W marker, skip and decode next char as W
+                    i++;
+                    decoded += 'W';
+                } else {
+                    // Handle multi-character sequences first (for Q and Y)
+                    let found = false;
+                    if (i + 1 < input.length) {
+                        const twoChars = input.substr(i, 2);
+                        if (twoChars === 'Ạ̇') {
+                            decoded += 'Q';
+                            i++; // Skip ahead
+                            found = true;
+                        } else if (twoChars === 'Ạ̦') {
+                            decoded += 'Y';
+                            i++; // Skip ahead
+                            found = true;
+                        }
+                    }
+
+                    // If no multi-character match, try single character
+                    if (!found) {
+                        const char = input[i];
+                        if (decodingMap[char]) {
+                            // Handle the ambiguous characters
+                            if (char === 'Å') {
+                                // If it has no marker, it's J
+                                decoded += 'J';
+                            } else if (char === 'Ȁ') {
+                                // If it has no marker, it's G
+                                decoded += 'G';
+                            } else {
+                                decoded += decodingMap[char];
+                            }
+                        } else {
+                            // Keep characters that don't have decodings
+                            decoded += char;
+                        }
+                    }
+                }
+            }
+
+            document.getElementById('output').value = decoded;
+        }
+
+        // Function to swap input and output text
+        function swapText() {
+            const inputEl = document.getElementById('input');
+            const outputEl = document.getElementById('output');
+
+            const temp = inputEl.value;
+            inputEl.value = outputEl.value;
+            outputEl.value = temp;
         }
     </script>
 </body>
