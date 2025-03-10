@@ -2,13 +2,13 @@
 const encodingMap = {
     'A': 'A',     // Simple A
     'B': 'Ȧ',     // A with dot above (U+0226)
-    'C': 'Ą',     // A with ogonek (U+0104)
+    'C': 'A\u0328',     // A with ogonek (U+0104)Ą
     'D': 'A\u0331',     // A with combining macron below (U+0331)
     'E': 'Á',     // A with acute (U+00C1)
     'F': 'A\u032e',     // A with combining breve below (U+032e)
     'G': 'A\u030b',     // A with combining double acute (U+030b)
     'H': 'A\u0330',     // A with combining tilde below (U+0330)
-    'I': 'Ẳ',     // A with breve and hook above (U+1EB2)
+    'I': 'A\u0309',     // A with a hook above (U+0309)
     'J': 'A\u0315',     // A with comgining comma above right (U+0315)
     'K': 'Ạ',     // A with dot below (U+1EA0)
     'L': 'Ă',     // A with breve (U+0102)
