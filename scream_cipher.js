@@ -66,39 +66,45 @@ function encodeText() {
     document.getElementById('output').value = encoded;
 }
 
-// Decode function with improved character disambiguation
+
+// Decode function with improved character handling for combining diacritics
 function decodeText() {
     const input = document.getElementById('input').value;
     let decoded = '';
+    let i = 0;
 
-    for (let i = 0; i < input.length; i++) {
-        // Check for marker characters
-        if (input[i] === '\u200B') {
-            // Handle multi-character sequences first (for Q and Y)
-            let found = false;
-            if (i + 1 < input.length) {
-                const twoChars = input.substr(i, 2);
-                if (twoChars === 'Ạ̇') {
-                    decoded += 'Q';
-                    i++; // Skip ahead
+    while (i < input.length) {
+        let found = false;
+
+        // Try to match characters with combining marks first
+        // Check each encoded value against the current position in the input
+        for (const [key, value] of Object.entries(encodingMap)) {
+            // Skip single character encodings for now
+            if (value.length === 1) continue;
+
+            // Check if the current position matches this multi-character encoding
+            if (i + value.length <= input.length) {
+                const potentialMatch = input.substring(i, i + value.length);
+                if (potentialMatch === value) {
+                    decoded += key;
+                    i += value.length;
                     found = true;
-                } else if (twoChars === 'Ạ̦') {
-                    decoded += 'Y';
-                    i++; // Skip ahead
-                    found = true;
+                    break;
                 }
             }
         }
 
-        // If no multi-character match, try single character
-         else {
+        // If no multi-character match was found, try single characters
+        if (!found) {
             const char = input[i];
+            // Check if this single character is in our decoding map
             if (decodingMap[char]) {
-                    decoded += decodingMap[char];
+                decoded += decodingMap[char];
             } else {
                 // Keep characters that don't have decodings
                 decoded += char;
             }
+            i++;
         }
     }
 
