@@ -2,14 +2,14 @@
 const encodingMap = {
     'A': 'A',     // Simple A
     'B': 'Ȧ',     // A with dot above (U+0226)
-    'C': 'A\u0328',     // A with ogonek (U+0104)Ą
+    'C': 'A\u0327',     // A with ogonek (U+0104)Ą
     'D': 'A\u0331',     // A with combining macron below (U+0331)
     'E': 'Á',     // A with acute (U+00C1)
     'F': 'A\u032e',     // A with combining breve below (U+032e)
     'G': 'A\u030b',     // A with combining double acute (U+030b)
     'H': 'A\u0330',     // A with combining tilde below (U+0330)
-    'I': 'A\u0309',     // A with a hook above (U+0309)
-    'J': 'A\u0315',     // A with comgining comma above right (U+0315)
+    'I': '\u1ea2',     // A with hook above (U+1EA2)
+    'J': 'A\u0313',     // A with combining ring above (U+0041)
     'K': 'Ạ',     // A with dot below (U+1EA0)
     'L': 'Ă',     // A with breve (U+0102)
     'M': 'Ǎ',     // A with caron (U+01CD)
@@ -22,9 +22,9 @@ const encodingMap = {
     'T': 'Ā',     // A with macron (U+0100)
     'U': 'Ä',     // A with diaeresis (U+00C4)
     'V': 'À',     // A with grave (U+00C0)
-    'W': 'A\u030f',     // A with combining double grave (U+030f)
-    'X': 'A\u036f',     // A with Combining Latin Small Letter X (U+036f)
-    'Y': 'Ạ̦',     // A with dot below and comma below
+    'W': '\u0200',     // A with combining double grave (U+030f)
+    'X': 'A\u033d',     // A with Combining Latin Small Letter X (U+036f)
+    'Y': 'A\u0326',     // A with dot below and comma below
     'Z': 'Ⱥ'      // A with stroke (U+023A)
 };
 
